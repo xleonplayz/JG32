@@ -1,0 +1,1223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<circuit>
+  <version>1</version>
+  <attributes/>
+  <visualElements>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>add</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1, 5
+# move r2, 3
+# add r1, r2
+# add r1, 2
+# if.ne r1, 10
+# error
+# halt
+
+program(0x1051, 0x2031, 0x1240, 0x1083, 0x12af, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="480" y="120"/>
+    </visualElement>
+    <visualElement>
+      <elementName>frontpanel.dig</elementName>
+      <elementAttributes/>
+      <pos x="780" y="140"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Clock</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>clock</string>
+        </entry>
+      </elementAttributes>
+      <pos x="740" y="120"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Out</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>error</string>
+        </entry>
+      </elementAttributes>
+      <pos x="1040" y="280"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Out</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>halt</string>
+        </entry>
+      </elementAttributes>
+      <pos x="1040" y="220"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Out</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>PC</string>
+        </entry>
+        <entry>
+          <string>Bits</string>
+          <int>16</int>
+        </entry>
+      </elementAttributes>
+      <pos x="1040" y="160"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>jump</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+#   jump one
+#   error
+# three:
+#   add r0, r1
+#   add r0, r2
+#   jump end
+#   error
+# two:
+#   move r2, 2
+#   jump three
+#   error
+# one:
+#   move r1, 3
+#   jump two
+#   error
+# end:
+#   if.ne r0, 5
+#   error
+#   halt
+
+program(0x0105, 0x0008, 0x0140, 0x0240, 0x00e5, 0x0008, 0x2021, 0xff45, 0x0008, 0x1031, 0xff65, 0x0008, 0x016f, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="120"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>if.eq</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1, 2
+# move r2, 3
+# move r3, 3
+# 
+# ; skip r-r
+# if.eq r1, r2
+# error
+# 
+# ; skip r-i
+# if.eq r1, 3
+# error
+# 
+# ; no-skip r-r
+# if.eq r2, r3
+# jump p1
+# error
+# p1:
+# 
+# ; no-skip r-i
+# if.eq r2, 3
+# jump p2
+# error
+# p2:
+# 
+# halt
+
+program(0x1021, 0x2031, 0x3031, 0x1268, 0x0008, 0x10eb, 0x0008, 0x2368, 0x0025, 0x0008, 0x20eb, 0x0025, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="220"/>
+    </visualElement>
+    <visualElement>
+      <elementName>In</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>run</string>
+        </entry>
+      </elementAttributes>
+      <pos x="740" y="160"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>loadstore</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r0, 2
+# move r1, 5
+# 
+# ; memory doesn&apos;t have 5
+# load r2, [r0,0]
+# if.eq r2, 5
+# error
+# 
+# ; store and check it does have 5
+# store [r0,0], r1
+# load r2, [r0,0]
+# if.ne r2, 5
+# error
+# 
+# ; check max offset of 15
+# move r1, 7
+# store [r0,15], r1
+# load r2, [r0,15]
+# if.ne r2, 7
+# error
+# 
+# ; check base equivalent to offset
+# move r2, 0
+# add r0, 15
+# load r2, [r0, 0]
+# if.ne r2, 7
+# error
+# 
+# ; check multiple writes and reads in a row
+# move r1, 1
+# move r2, 2
+# move r3, 3
+# move r4, 4
+# move r5, 5
+# move r6, 6
+# move r0, 0
+# store [r0, 3], r3
+# store [r0, 1], r1
+# store [r0, 6], r6
+# store [r0, 2], r2
+# store [r0, 4], r4
+# store [r0, 5], r5
+# move r1, -1
+# move r2, -1
+# move r3, -1
+# move r4, -1
+# move r5, -1
+# move r6, -1
+# load r5, [r0, 5]
+# load r1, [r0, 1]
+# load r6, [r0, 6]
+# load r2, [r0, 2]
+# load r4, [r0, 4]
+# load r3, [r0, 3]
+# if.ne r1, 1
+#   error
+# if.ne r2, 2
+#   error
+# if.ne r3, 3
+#   error
+# if.ne r4, 4
+#   error
+# if.ne r5, 5
+#   error
+# if.ne r6, 6
+#   error
+# 
+# load r3, [r0, 3]
+# jump skiperr1
+# error
+# skiperr1:
+# 
+# store [r0, 3], r3
+# jump skiperr2
+# error
+# skiperr2:
+# 
+# halt
+
+program(0x0021, 0x1051, 0x2002, 0x216b, 0x0008, 0x1006, 0x2002, 0x216f, 0x0008, 0x1071, 0x10f6, 0x20f2, 0x21ef, 0x0008, 0x2001, 0x03c3, 0x2002, 0x21ef, 0x0008, 0x1011, 0x2021, 0x3031, 0x4041, 0x5051, 0x6061, 0x0001, 0x3036, 0x1016, 0x6066, 0x2026, 0x4046, 0x5056, 0x1ff1, 0x2ff1, 0x3ff1, 0x4ff1, 0x5ff1, 0x6ff1, 0x5052, 0x1012, 0x6062, 0x2022, 0x4042, 0x3032, 0x106f, 0x0008, 0x20af, 0x0008, 0x30ef, 0x0008, 0x412f, 0x0008, 0x516f, 0x0008, 0x61af, 0x0008, 0x3032, 0x0025, 0x0008, 0x3036, 0x0025, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="360" y="120"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>if.ne</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1, 2
+# move r2, 3
+# move r3, 3
+# 
+# ; skip r-r
+# if.ne r2, r2
+# error
+# 
+# ; skip r-i
+# if.ne r1, 2
+# error
+# 
+# ; no-skip r-r
+# if.ne r2, r1
+# jump p1
+# error
+# p1:
+# 
+# ; no-skip r-i
+# if.ne r2, 2
+# jump p2
+# error
+# p2:
+# 
+# halt
+
+program(0x1021, 0x2031, 0x3031, 0x226c, 0x0008, 0x10af, 0x0008, 0x216c, 0x0025, 0x0008, 0x20af, 0x0025, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="360" y="220"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>if.lt</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1, -1
+# move r2, 0
+# 
+# ; skip r-r
+# if.lt r2, r1
+# error
+# 
+# ; skip r-r equal
+# if.lt r2, r2
+# error
+# 
+# ; skip r-i
+# if.lt r2, -1
+# error
+# 
+# ; skip r-i equal
+# if.lt r2, 0
+# error
+# 
+# ; no-skip r-r
+# if.lt r1, r2
+# jump p1
+# error
+# p1:
+# 
+# ; no-skip r-i
+# if.lt r1, 1
+# jump p2
+# error
+# p2:
+# 
+# halt
+
+program(0x1ff1, 0x2001, 0x2170, 0x0008, 0x2270, 0x0008, 0x2ff3, 0x0008, 0x2033, 0x0008, 0x1270, 0x0025, 0x0008, 0x1073, 0x0025, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="320"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>if.ge</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1, -1
+# move r2, 0
+# 
+# ; skip r-r
+# if.ge r1, r2
+# error
+# 
+# ; skip r-i
+# if.ge r1, 0
+# error
+# 
+# ; no-skip r-r
+# if.ge r2, r1
+# jump p1
+# error
+# p1:
+# 
+# ; no-skip r-r equal
+# if.ge r2, r2
+# jump p2
+# error
+# p2:
+# 
+# ; no-skip r-i
+# if.ge r2, 0
+# jump p3
+# error
+# p3:
+# 
+# ; no-skip r-i equal
+# if.ge r1, -1
+# jump p4
+# error
+# p4:
+# 
+# halt
+
+program(0x1ff1, 0x2001, 0x1274, 0x0008, 0x1037, 0x0008, 0x2174, 0x0025, 0x0008, 0x2274, 0x0025, 0x0008, 0x2037, 0x0025, 0x0008, 0x1ff7, 0x0025, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="360" y="320"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>if.lo</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1, 0
+# move r2, -1 ; 0xffff
+# 
+# ; skip r-r
+# if.lo r2, r1
+# error
+# 
+# ; skip r-r equal
+# if.lo r2, r2
+# error
+# 
+# ; skip r-i
+# if.lo r2, 0
+# error
+# 
+# ; skip r-i equal
+# if.lo r2, -1
+# error
+# 
+# ; no-skip r-r
+# if.lo r1, r2
+# jump p1
+# error
+# p1:
+# 
+# ; no-skip r-i
+# if.lo r1, 1
+# jump p2
+# error
+# p2:
+# 
+# halt
+
+program(0x1001, 0x2ff1, 0x2178, 0x0008, 0x2278, 0x0008, 0x203b, 0x0008, 0x2ffb, 0x0008, 0x1278, 0x0025, 0x0008, 0x107b, 0x0025, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="420"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>if.hs</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1, 0
+# move r2, -1 ; 0xffff
+# 
+# ; skip r-r
+# if.hs r1, r2
+# error
+# 
+# ; skip r-i
+# if.hs r1, -1
+# error
+# 
+# ; no-skip r-r
+# if.hs r2, r1
+# jump p1
+# error
+# p1:
+# 
+# ; no-skip r-r equal
+# if.hs r2, r2
+# jump p2
+# error
+# p2:
+# 
+# ; no-skip r-i
+# if.hs r2, -1
+# jump p3
+# error
+# p3:
+# 
+# ; no-skip r-i equal
+# if.hs r1, 0
+# jump p4
+# error
+# p4:
+# 
+# halt
+
+program(0x1001, 0x2ff1, 0x127c, 0x0008, 0x1fff, 0x0008, 0x217c, 0x0025, 0x0008, 0x227c, 0x0025, 0x0008, 0x2fff, 0x0025, 0x0008, 0x103f, 0x0025, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="360" y="420"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>sub</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1, 5
+# move r2, 3
+# sub r1, r2
+# if.ne r1, 2
+#   error
+# 
+# sub r1, 2
+# if.ne r1, 0
+#   error
+# halt
+
+program(0x1051, 0x2031, 0x1244, 0x10af, 0x0008, 0x1087, 0x102f, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="480" y="220"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>xor</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1,  0b110
+# move r2,  0b010
+# 
+# xor r1, r2
+# if.ne r1, 0b100
+#   error
+# 
+# xor r1, r2
+# if.ne r1, 0b110
+#   error
+# 
+# xor r1,   0b011
+# if.ne r1, 0b101
+#   error
+# 
+# halt
+
+program(0x1061, 0x2021, 0x1250, 0x112f, 0x0008, 0x1250, 0x11af, 0x0008, 0x10d3, 0x116f, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="480" y="320"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>and</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1,  0b0110
+# move r2,  0b1010
+# 
+# and r1, r2
+# if.ne r1, 0b0010
+#   error
+# 
+# and r2,   0b1101
+# if.ne r2, 0b1000
+#   error
+# 
+# halt
+
+program(0x1061, 0x20a1, 0x1254, 0x10af, 0x0008, 0x2357, 0x222f, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="480" y="420"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>or</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1,  0b0110
+# move r2,  0b1010
+# 
+# or r1, r2
+# if.ne r1, 0b1110
+#   error
+# 
+# or r2,   0b0001
+# if.ne r2, 0b1011
+#   error
+# 
+# halt
+
+program(0x1061, 0x20a1, 0x1258, 0x13af, 0x0008, 0x205b, 0x22ef, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="600" y="320"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>call</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# call test
+# if.ne r1, 5
+#   error
+# halt
+# 
+# error
+# test:
+#   move r1, 5
+#   jump r0
+# 
+# error
+# halt
+
+program(0x0095, 0x116f, 0x0008, 0x000c, 0x0008, 0x1051, 0x0020, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="600" y="420"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>shl</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1,  0b011
+# move r2,  0
+# move r3,  1
+# move r4,  2
+# 
+# shl r1, 0
+# if.ne r1, 0b011
+#   error
+# 
+# shl r1, r2
+# if.ne r1, 0b011
+#   error
+# 
+# shl r1, 1
+# if.ne r1, 0b110
+#   error
+# 
+# shl r1, r3
+# if.ne r1, 0b1100
+#   error
+# 
+# move r1,  0b011
+# 
+# shl r1, 2
+# if.ne r1, 0b1100
+#   error
+# 
+# move r1,  0b011
+# 
+# shl r1, r4
+# if.ne r1, 0b1100
+#   error
+# 
+# halt
+
+program(0x1031, 0x2001, 0x3011, 0x4021, 0x101f, 0x10ef, 0x0008, 0x125c, 0x10ef, 0x0008, 0x105f, 0x11af, 0x0008, 0x135c, 0x132f, 0x0008, 0x1031, 0x109f, 0x132f, 0x0008, 0x1031, 0x145c, 0x132f, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="500"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>shr</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1,  0b110
+# move r2,  0
+# move r3,  1
+# move r4,  2
+# 
+# shr r1, 0
+# if.ne r1, 0b110
+#   error
+# 
+# shr r1, r2
+# if.ne r1, 0b110
+#   error
+# 
+# shr r1, 1
+# if.ne r1, 0b011
+#   error
+# 
+# shr r1, r3
+# if.ne r1, 0b001
+#   error
+# 
+# move r1,  0b1100
+# 
+# shr r1, 2
+# if.ne r1, 0b0011
+#   error
+# 
+# move r1,  0b1100
+# 
+# shr r1, r4
+# if.ne r1, 0b0011
+#   error
+# 
+# move r1, -42
+# shr r1, 2
+# if.eq r1, -10
+#   error
+# 
+# halt
+
+program(0x1061, 0x2001, 0x3011, 0x4021, 0x1023, 0x11af, 0x0008, 0x1260, 0x11af, 0x0008, 0x1063, 0x10ef, 0x0008, 0x1360, 0x106f, 0x0008, 0x10c1, 0x10a3, 0x10ef, 0x0008, 0x10c1, 0x1460, 0x10ef, 0x0008, 0x1d61, 0x10a3, 0x1dab, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="360" y="500"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>asr</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# move r1,  0b110
+# move r2,  0
+# move r3,  1
+# move r4,  2
+# 
+# asr r1, 0
+# if.ne r1, 0b110
+#   error
+# 
+# asr r1, r2
+# if.ne r1, 0b110
+#   error
+# 
+# asr r1, 1
+# if.ne r1, 0b011
+#   error
+# 
+# asr r1, r3
+# if.ne r1, 0b001
+#   error
+# 
+# move r1,  0b1100
+# 
+# asr r1, 2
+# if.ne r1, 0b0011
+#   error
+# 
+# move r1,  0b1100
+# 
+# asr r1, r4
+# if.ne r1, 0b0011
+#   error
+# 
+# move r1, -8
+# asr r1, 2
+# if.ne r1, -2
+#   error
+# 
+# asr r1, 2
+# if.ne r1, -1
+#   error
+# 
+# move r1, -10
+# asr r1, 1
+# if.ne r1, -5
+#   error
+# 
+# halt
+
+program(0x1061, 0x2001, 0x3011, 0x4021, 0x1027, 0x11af, 0x0008, 0x1264, 0x11af, 0x0008, 0x1067, 0x10ef, 0x0008, 0x1364, 0x106f, 0x0008, 0x10c1, 0x10a7, 0x10ef, 0x0008, 0x10c1, 0x1464, 0x10ef, 0x0008, 0x1f81, 0x10a7, 0x1faf, 0x0008, 0x10a7, 0x1fef, 0x0008, 0x1f61, 0x1067, 0x1eef, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="480" y="500"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Testcase</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>imm</string>
+        </entry>
+        <entry>
+          <string>Testdata</string>
+          <testData>
+            <dataString>clock run error halt
+
+# #include &quot;../cpudef.asm&quot;
+# 
+# ; put the upper 11 bits of 0xffff into r3
+# imm 0xffff
+# move r3, 0
+# 
+# ; r3 should now equal -32 or 0xffe0
+# ; lets invert that
+# xor r3, -1
+# 
+# ; r3 should now be 0xf or 0b1111
+# if.ne r3, 0b1111
+#   error
+# 
+# ; construct a 16 bit value in r1 without using the imm instruction
+# move r1, 0x75
+# shl r1, 8
+# move r2, 0x49
+# or r1, r2
+# 
+# ; trigger imm to augment the if.ne instruction with a 16-bit value
+# if.ne r1, 0x7549
+#   error
+# 
+# ; try imm augmentation on add in addition to if.ne
+# move r5, 70
+# add r5, 128
+# if.ne r5, 70+128
+#   error
+# 
+# ; make sure 63 doesn&apos;t become -1 in the if.ne
+# move r5, 63
+# if.ne r5, 63
+#   error
+# 
+# ; handle the special case of skipping the imm instruction
+# ; in the first if.ne, the add instruction will have an imm prefix
+# ; we want to skip that imm prefix and the add
+# ; otherwise the assembler needs detect this case and perform a very
+# ; complicated workaround that customasm doesn&apos;t support
+# move r5, 10
+# if.ne r5, 10
+#   add r5, 100
+# if.ne r5, 10
+#   error
+# 
+# move r5, 0x7e12
+# if.ne r5, 0x7e12
+#   error
+# 
+# ; grab the pc and put it in r4
+# call grabpc
+# grabpc:
+# move r4, ra   ; 1
+# 
+# move r5, 0x7F ; 2
+# 
+# ; grab the pc and put it in r2
+# call grabpc2  ; 3
+# grabpc2:
+# move r2, ra
+# 
+# ; subtract pc values
+# sub r2, r4
+# 
+# ; assert there is not a imm instruction inserted
+# if.ne r2, 3
+#  error
+# 
+# move r2, 32
+# move r1, 0
+# move r4, 0x1234
+# 
+# ; check imm prefix is handled on load properly
+# store [r2], r4
+# imm 32
+# load r3, [r1, 0]
+# if.ne r3, 0x1234
+#   error
+# 
+# ; check imm prefix for store
+# ; move r4, 0x5678
+# ; store [r1, 17], r4
+# ; nop
+# ; load r3, [r2]
+# ; nop
+# ; if.ne r3, 0x5678
+# ;   error
+# 
+# 
+# halt
+
+program(0xfffd, 0x3001, 0x3fd3, 0x33ef, 0x0008, 0x1751, 0x121f, 0x2491, 0x1258, 0x754d, 0x126f, 0x0008, 0x5461, 0x008d, 0x5003, 0x00cd, 0x51af, 0x0008, 0x53f1, 0x003d, 0x5fef, 0x0008, 0x50a1, 0x52af, 0x006d, 0x5903, 0x52af, 0x0008, 0x7e1d, 0x5121, 0x7e1d, 0x54af, 0x0008, 0x0015, 0x4018, 0x57f1, 0x0015, 0x2018, 0x2444, 0x20ef, 0x0008, 0x2201, 0x1001, 0x123d, 0x4341, 0x4206, 0x002d, 0x3102, 0x123d, 0x3d2f, 0x0008, 0x000c)
+
+let i = 0;
+while(!(halt | error | (i &gt;= 100)))
+  let i = i + 1;
+  0 1 0 0
+  1 1 x x
+end while
+0 1 0 1
+</dataString>
+          </testData>
+        </entry>
+      </elementAttributes>
+      <pos x="600" y="220"/>
+    </visualElement>
+  </visualElements>
+  <wires>
+    <wire>
+      <p1 x="1020" y="160"/>
+      <p2 x="1040" y="160"/>
+    </wire>
+    <wire>
+      <p1 x="920" y="160"/>
+      <p2 x="1000" y="160"/>
+    </wire>
+    <wire>
+      <p1 x="740" y="160"/>
+      <p2 x="780" y="160"/>
+    </wire>
+    <wire>
+      <p1 x="920" y="180"/>
+      <p2 x="980" y="180"/>
+    </wire>
+    <wire>
+      <p1 x="980" y="280"/>
+      <p2 x="1040" y="280"/>
+    </wire>
+    <wire>
+      <p1 x="740" y="120"/>
+      <p2 x="760" y="120"/>
+    </wire>
+    <wire>
+      <p1 x="920" y="140"/>
+      <p2 x="1020" y="140"/>
+    </wire>
+    <wire>
+      <p1 x="760" y="140"/>
+      <p2 x="780" y="140"/>
+    </wire>
+    <wire>
+      <p1 x="1000" y="220"/>
+      <p2 x="1040" y="220"/>
+    </wire>
+    <wire>
+      <p1 x="980" y="180"/>
+      <p2 x="980" y="280"/>
+    </wire>
+    <wire>
+      <p1 x="1000" y="160"/>
+      <p2 x="1000" y="220"/>
+    </wire>
+    <wire>
+      <p1 x="760" y="120"/>
+      <p2 x="760" y="140"/>
+    </wire>
+    <wire>
+      <p1 x="1020" y="140"/>
+      <p2 x="1020" y="160"/>
+    </wire>
+  </wires>
+  <measurementOrdering/>
+</circuit>
